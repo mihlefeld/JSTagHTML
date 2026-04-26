@@ -85,7 +85,7 @@
             <div class="assignments">
             {% for event in person.schedule.group_schedule %}
             <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }}">
-              <img class="event-img" src="/assets/svgs/{{ event.activity.event }}.svg">
+              <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
               <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
               <span>
                 {% for role in event.roles %}
