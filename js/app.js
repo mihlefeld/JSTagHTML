@@ -15,7 +15,7 @@ class AppState {
         this.templateText = '';
         this.lastError = null;
         this.renderedHtml = null;
-        this.selectedTemplate = "/templates/minimal.html.jinja"
+        this.selectedTemplate = "/JSTagHTML/templates/base.html.jinja"
     }
 
     async loadSelectedTemplate() {
