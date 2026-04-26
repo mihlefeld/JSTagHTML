@@ -1,0 +1,324 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.header-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.competition-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.competition-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.competition-input-compact {
+    padding: 0.4rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.95);
+    min-width: 180px;
+}
+
+.competition-input-compact:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+}
+
+#fetch-button {
+    padding: 0.4rem 0.75rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#fetch-button:hover {
+    background: #764ba2;
+}
+
+#fetch-button:active {
+    transform: scale(0.98);
+}
+
+.status-message {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+.status-message.error {
+    color: #d32f2f;
+}
+
+.status-message.success {
+    color: #388e3c;
+}
+
+/* Main Container */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin: 0 auto;
+    min-height: calc(100vh - 280px);
+}
+
+/* Panels */
+.panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel h2 {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Editor Panel */
+.editor-panel {
+    min-height: 600px;
+}
+
+.editor-container {
+    flex: 1;
+    min-height: 500px;
+    background: white;
+}
+
+/* Ace Editor Default Styling */
+.editor-container {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+}
+
+.editor-controls {
+    padding: 1rem;
+    border-top: 1px solid #eee;
+    background: #fafafa;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.editor-controls button,
+.preview-controls button {
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.editor-controls button:hover,
+.preview-controls button:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.editor-controls button:active,
+.preview-controls button:active {
+    transform: translateY(0);
+}
+
+/* Preview Panel */
+.preview-panel {
+    min-height: 600px;
+}
+
+.preview-controls {
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.preview-controls button {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.preview-container {
+    flex: 1;
+    overflow: auto;
+    background: white;
+    padding: 2rem;
+}
+
+.preview-container .placeholder {
+    color: #999;
+    text-align: center;
+    padding-top: 3rem;
+}
+
+.preview-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+}
+
+/* Preview renders the full HTML template output */
+.preview-container {
+    background: white;
+}
+
+/* Print Styles */
+@media print {
+    header, footer, .editor-panel, .editor-controls, .preview-controls, .preview-status {
+        display: none !important;
+    }
+
+    .container {
+        display: block;
+        padding: 0;
+        max-width: 100%;
+        min-height: auto;
+    }
+
+    .preview-panel {
+        padding: 0;
+        box-shadow: none;
+        background: white;
+    }
+
+    .preview-container {
+        padding: 0;
+        background: white;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .panel {
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-controls {
+        flex-direction: column;
+    }
+
+    .competition-input {
+        min-width: 100%;
+    }
+
+    #fetch-button {
+        width: 100%;
+    }
+
+    .editor-controls,
+    .preview-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .editor-controls button,
+    .preview-controls button {
+        width: 100%;
+    }
+}
+
+/* Error/Success States */
+.error-message {
+    color: #d32f2f;
+    background: #ffebee;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem;
+    border-left: 4px solid #d32f2f;
+}
+
+.success-message {
+    color: #388e3c;
+    background: #e8f5e9;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem;
+    border-left: 4px solid #388e3c;
+}
+
+/* Loading Spinner */
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

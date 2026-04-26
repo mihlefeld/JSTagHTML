@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagHTML - WCA Competition Nametag Editor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Ace Editor CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.0/ace.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>TagHTML Nametag Editor</h1>
+        </header>
+
+        <div class="container">
+            <!-- Left Panel: Template Editor -->
+            <div class="panel editor-panel">
+                <select name="templates" id="templates-select">
+                    <option value="/templates/minimal.html.jinja">Minimal</option>
+                    <option value="/templates/base.html.jinja">Base</option>
+                    <option value="/templates/fancy.html.jinja">Fancy</option>
+                </select>
+                <div id="editor" class="editor-container"></div>
+                <div class="editor-controls">
+                    <button id="reset-template-button">Reset to Default</button>
+                    <button id="save-session-button">Save Session</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Live Preview -->
+            <div class="panel preview-panel">
+                <h2>Preview</h2>
+                <div id="preview-controls" class="preview-controls">
+                    <input 
+                        type="text" 
+                        id="competition-id" 
+                        placeholder="Competition ID"
+                        class="competition-input-compact"
+                    >
+                    <button id="fetch-button">Fetch</button>
+                    <span id="fetch-status" class="status-message"></span>
+                    <span id="preview-status" class="status-message"></span>
+                    <button id="print-button">Print / Export PDF</button>
+                </div>
+                <iframe id="preview" class="preview-container">
+                    <p class="placeholder">Enter competition ID above and edit the template to see the preview here.</p>
+                </iframe>
+            </div>
+        </div>
+
+    </div>
+    <!-- Nunjucks (Jinja2-compatible templating) -->
+    <script src="https://cdn.jsdelivr.net/npm/nunjucks@3.2.3/browser/nunjucks.min.js"></script>
+    
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

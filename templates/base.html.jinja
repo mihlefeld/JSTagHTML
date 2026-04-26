@@ -1,0 +1,106 @@
+{# TagHTML Nametag Template - Full Page Layout #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --tag-width: 8.5cm;
+            --tag-height: 6cm;
+            --page-width: 21cm;
+            --page-height: 29.7cm;
+        }
+        
+        body {
+          font-family: sans-serif;
+        }
+        
+        @page {
+            size: var(--page-width) var(--page-height);
+        } 
+        
+        .nametags { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, var(--tag-width)); 
+        }
+        
+        .nametag {
+          width: var(--tag-width);
+          height: var(--tag-height);
+          page-break-inside: avoid;
+          box-sizing: border-box;
+          border: 0.1cm dashed #333;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          overflow: hidden;
+          padding: 0.1cm;
+          justify-content: center;
+        }
+
+        .event-img {
+            height: 0.2cm;
+        }
+        
+        .assignments {
+          align-self: start;
+          display: grid;
+          grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+          grid-auto-flow: column;
+          box-sizing: border-box;
+          gap: 0.05cm;
+          height: 100%;
+        }
+        
+        .event {
+          border-radius: 0.1cm;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          width: 1.5cm;
+          height: 0.5cm;
+          font-size: 0.18cm;
+          padding: 0.05cm;
+          box-sizing: border-box;
+          gap: 0.05cm;
+        }
+        
+        .day-Sa {
+          background: #ffaaaa;
+        }
+        .day-So {
+          background: #aaf;
+        }
+    </style>
+</head>
+<body>
+    <div class="nametags">
+    {% for person in persons %}
+        <div class="nametag front">
+            <h2>{{ person.name }}</h2>
+        </div>
+        <div class="nametag back">
+            {% if person.schedule %}
+            <div class="assignments">
+            {% for event in person.schedule.group_schedule %}
+            <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }}">
+              <img class="event-img" src="/assets/svgs/{{ event.activity.event }}.svg">
+              <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
+              <span>
+                {% for role in event.roles %}
+                {{ role[0] | upper }}
+                {% endfor %}
+              </span>
+              <span>{{ event.activity.group_start.toLocaleTimeString('de-de', {hour: "2-digit", "minute": "2-digit"}) }}</span>
+            </div>
+            {% endfor %}
+            </div>
+            {% else %}
+            <p><em>No events assigned</em></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
