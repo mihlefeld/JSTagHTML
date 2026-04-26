@@ -338,10 +338,11 @@ class WCAClient {
             return {
                 id: person.registrantId,
                 name: person.name,
-                wca_id: person.wcaId,
-                country: person.country?.name,
-                country_iso2: person.country?.iso2,
+                wcaId: person.wcaId,
+                countryIso2: person.countryIso2,
                 gender: person.gender,
+                avatar: person.avatar,
+                personalBests: person.personalBests,
                 registration: {
                     role: person.registration?.role || 'COMPETITOR'
                 },
