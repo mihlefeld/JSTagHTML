@@ -9,6 +9,9 @@
             --tag-height: 6cm;
             --page-width: 21cm;
             --page-height: 29.7cm;
+            --primary: oklch(0.8 0.1 28.31);
+            --secondary: oklch(0.8 0.1 234);
+            --tertiary: oklch(0.8 0.1 78.52);
         }
         
         body {
@@ -36,6 +39,8 @@
           overflow: hidden;
           padding: 0.1cm;
           justify-content: center;
+          position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
         }
 
         .event-img {
@@ -66,11 +71,66 @@
           gap: 0.05cm;
         }
         
+        .day-Fr {
+          background: var(--tertiary);
+        }
         .day-Sa {
-          background: #ffaaaa;
+          background: var(--secondary);
         }
         .day-So {
-          background: #aaf;
+          background: var(--primary);
+        }
+        
+        .front-name {
+          font-weight: 800;
+          font-size: xx-large;
+          text-align: center;
+          width: 5cm;
+          position: absolute;
+          top: 1.2cm;
+          margin: 0;
+          z-index: 2;
+        }
+        
+        .logo {
+          height: 1cm;
+        }
+        .front-country-flag {
+          height: 1cm;
+        }
+        .front-id {
+          font-weight: 800;
+          font-size: large;
+        }
+        .front-logo-row {
+          position: absolute;
+          bottom: 0;
+          width: var(--tag-width);
+          display: flex;
+          justify-content: space-between;
+          padding: 0.2cm;
+          box-sizing: border-box;
+          align-items: baseline;
+        }
+        .comp-logo {
+          position: absolute;
+          height: 3cm;
+          top: 1.2cm;
+          z-index: 1;
+          opacity: 0.1;
+          
+        }
+        .front-competition-name {
+          position: absolute;
+          top: 0.05cm;
+          font-weight: bold;
+          opacity: 0.5;
+        }
+        .inactive {
+          filter: saturate(0.3);
+        }
+        .back {
+        
         }
     </style>
 </head>
@@ -78,13 +138,20 @@
     <div class="nametags">
     {% for person in persons %}
         <div class="nametag front">
-            <h2>{{ person.name }}</h2>
+            <p class="front-competition-name">{{competition.name}}</p>
+            <h2 class="front-name">{{ person.name }}</h2>
+            <img class="comp-logo" src="{{ file_url('comp-logo.png') }} "/>
+            <div class="front-logo-row">
+              <span class="front-id adjust-size-to-fit">ID: {{ person.id }}</span>
+              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 }}.png"></img>
+              <img class="logo" src="{{ file_url('logo.svg') }}">
+            </div>
         </div>
         <div class="nametag back">
             {% if person.schedule %}
             <div class="assignments">
             {% for event in person.schedule.group_schedule %}
-            <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }}">
+            <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }} {{ "active" if event.roles[0] else "inactive"}}">
               <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
               <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
               <span>
@@ -102,5 +169,34 @@
         </div>
     {% endfor %}
     </div>
+    <script>
+    document.querySelectorAll('.adjust-size-to-fit').forEach(function(el) {
+      const originalFontSize = parseFloat(window.getComputedStyle(el).fontSize);
+      let fontSize = originalFontSize;
+      const parentWidth = el.clientWidth;
+      const parentHeight = el.clientHeight;
+
+      // Create a clone for measurement
+      const clone = el.cloneNode(true);
+      clone.style.visibility = 'hidden';
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      clone.style.top = '-9999px';
+      clone.style.width = el.clientWidth + 'px';
+      clone.style.height = 'auto';
+      clone.style.whiteSpace = 'nowrap';
+      document.body.appendChild(clone);
+
+      // Reduce font size until it fits or reaches original minimum
+      while ((clone.scrollWidth > parentWidth || clone.scrollHeight > parentHeight) && fontSize > 4) {
+        fontSize -= 1;
+        clone.style.fontSize = fontSize + 'px';
+      }
+
+      // Apply the new font size, but never increase it
+      el.style.fontSize = Math.min(fontSize, originalFontSize) + 'px';
+      document.body.removeChild(clone);
+    });
+    </script>
 </body>
 </html>

@@ -6,8 +6,6 @@
 // State Management
 // ============================================================================
 
-// ...existing code...
-
 class AppState {
     constructor() {
         this.competitionId = '';
@@ -379,6 +377,94 @@ class WCAClient {
 // Template Rendering
 // ============================================================================
 
+const uploadedFiles = new Map(); // key: filename, value: { name, type, size, dataUrl, text }
+
+const templateFilesInput = document.getElementById("template-files-input");
+const clearFilesButton = document.getElementById("clear-files-button");
+const filesStatus = document.getElementById("files-status");
+
+function isLikelyTextFile(file) {
+    const textType = file.type && file.type.startsWith("text/");
+    const textExt = /\.(txt|json|csv|xml|svg|html?|css|js|md|yaml|yml)$/i.test(file.name);
+    return textType || textExt;
+}
+
+function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function addUploadedFiles(fileList) {
+    const files = Array.from(fileList || []);
+    for (const file of files) {
+        const dataUrl = await readFileAsDataUrl(file);
+        let text = null;
+        if (isLikelyTextFile(file)) {
+            try {
+                text = await file.text();
+            } catch {
+                text = null;
+            }
+        }
+
+        uploadedFiles.set(file.name, {
+            name: file.name,
+            type: file.type || "application/octet-stream",
+            size: file.size,
+            dataUrl,
+            text
+        });
+    }
+
+    if (filesStatus) {
+        filesStatus.textContent = `${uploadedFiles.size} file(s) loaded`;
+    }
+}
+
+function buildUploadedFilesContext() {
+    const files = {};
+    for (const [name, file] of uploadedFiles.entries()) {
+        files[name] = {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            url: file.dataUrl,   // data URL for <img>, <link>, etc.
+            text: file.text      // text content if readable
+        };
+    }
+
+    return {
+        files,
+        file_url: (name) => (files[name] ? files[name].url : ""),
+        file_text: (name) => (files[name] ? (files[name].text || "") : "")
+    };
+}
+
+if (templateFilesInput) {
+    templateFilesInput.addEventListener("change", async (e) => {
+        await addUploadedFiles(e.target.files);
+        // Re-render preview after file load
+        if (typeof renderPreview === "function") {
+            renderPreview();
+        }
+    });
+}
+
+if (clearFilesButton) {
+    clearFilesButton.addEventListener("click", () => {
+        uploadedFiles.clear();
+        if (templateFilesInput) templateFilesInput.value = "";
+        if (filesStatus) filesStatus.textContent = "No files loaded";
+        if (typeof renderPreview === "function") {
+            renderPreview();
+        }
+    });
+}
+
 class TemplateRenderer {
     /**
      * Render a Jinja2 template with the given context using Nunjucks (Jinja2-compatible)
@@ -396,9 +482,16 @@ class TemplateRenderer {
             env.addFilter('keylist', (data, key) => {
                 return Object.values(data).map((obj) => obj[key]);
             });
+
+            const uploadedContext = buildUploadedFilesContext();
+
+            const fullContext = {
+                ...context,
+                ...uploadedContext
+            }
             
             // Compile and render the template
-            const html = env.renderString(templateText, context);
+            const html = env.renderString(templateText, fullContext);
             return html;
         } catch (error) {
             console.log(error);

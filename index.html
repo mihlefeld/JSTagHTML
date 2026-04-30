@@ -16,10 +16,19 @@
 
         <div class="container">
             <!-- Left Panel: Template Editor -->
+             
             <div class="panel editor-panel">
                 <select name="templates" id="templates-select">
                     <option value="/JSTagHTML/templates/base.html.jinja">Base</option>
                 </select>
+
+                <!-- Added: local template assets -->
+                <div class="template-assets-controls">
+                    <input type="file" id="template-files-input" multiple />
+                    <button id="clear-files-button" type="button">Clear Files</button>
+                    <span id="files-status" class="status-message"></span>
+                </div>
+
                 <div id="editor" class="editor-container"></div>
                 <div class="editor-controls">
                     <button id="reset-template-button">Reset to Default</button>
