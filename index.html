@@ -17,24 +17,43 @@
         <div class="container">
             <!-- Left Panel: Template Editor -->
              
-            <div class="panel editor-panel">
-                <select name="templates" id="templates-select">
-                    <option value="/JSTagHTML/templates/base.html.jinja">Base</option>
-                </select>
+        <div class="panel editor-panel">
+            <div class="template-controls" aria-labelledby="template-controls-title">
+                <h2 id="template-controls-title" class="sr-only">Template settings</h2>
 
-                <!-- Added: local template assets -->
-                <div class="template-assets-controls">
-                    <input type="file" id="template-files-input" multiple />
-                    <button id="clear-files-button" type="button">Clear Files</button>
-                    <span id="files-status" class="status-message"></span>
+                <div class="control-row">
+                    <label for="templates-select" class="control-label">Template</label>
+                    <select name="templates" id="templates-select" aria-describedby="template-help">
+                        <option value="/JSTagHTML/templates/personal-schedule.html.jinja">Personal Schedules</option>
+                        <option value="/JSTagHTML/templates/event-overview.html.jinja">Event Overview</option>
+                    </select>
                 </div>
+                <p id="template-help" class="help-text">
+                    Choose a template, then optionally load local files for use in custom templates.
+                </p>
 
-                <div id="editor" class="editor-container"></div>
-                <div class="editor-controls">
-                    <button id="reset-template-button">Reset to Default</button>
-                    <button id="save-session-button">Save Session</button>
+                <div class="template-assets-controls" role="group" aria-labelledby="template-assets-label" aria-describedby="files-help files-status">
+                    <p id="template-assets-label" class="control-label">Local template assets</p>
+
+                    <div class="asset-actions">
+                        <label for="template-files-input" class="sr-only">Upload local files</label>
+                        <input type="file" id="template-files-input" multiple />
+                        <button id="clear-files-button" type="button">Clear files</button>
+                    </div>
+
+                    <p id="files-help" class="help-text">
+                        Files are loaded locally in your browser and are not uploaded.
+                    </p>
+                    <span id="files-status" class="status-message" role="status" aria-live="polite">No files loaded</span>
                 </div>
             </div>
+
+            <div id="editor" class="editor-container"></div>
+            <div class="editor-controls">
+                <button id="reset-template-button">Reset to Default</button>
+                <button id="save-session-button">Save Session</button>
+            </div>
+        </div>
 
             <!-- Right Panel: Live Preview -->
             <div class="panel preview-panel">

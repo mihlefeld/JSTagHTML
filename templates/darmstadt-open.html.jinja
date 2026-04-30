@@ -86,6 +86,7 @@
           font-size: xx-large;
           text-align: center;
           width: 5cm;
+          height: 2.3cm;
           position: absolute;
           top: 1.2cm;
           margin: 0;
@@ -155,9 +156,7 @@
               <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
               <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
               <span>
-                {% for role in event.roles %}
-                {{ role[0] | upper }}
-                {% endfor %}
+                {{ event.roles[0][0] | upper}}
               </span>
               <span>{{ event.activity.group_start.toLocaleTimeString('de-de', {hour: "2-digit", "minute": "2-digit"}) }}</span>
             </div>
@@ -182,9 +181,9 @@
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
       clone.style.top = '-9999px';
-      clone.style.width = el.clientWidth + 'px';
-      clone.style.height = 'auto';
-      clone.style.whiteSpace = 'nowrap';
+      clone.style.width = parentWidth + 'px';
+      clone.style.height = parentHeight;
+      clone.style.whiteSpace = 'wrap';
       document.body.appendChild(clone);
 
       // Reduce font size until it fits or reaches original minimum

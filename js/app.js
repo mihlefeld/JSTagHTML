@@ -13,14 +13,14 @@ class AppState {
         this.templateText = '';
         this.lastError = null;
         this.renderedHtml = null;
-        this.selectedTemplate = "/JSTagHTML/templates/base.html.jinja"
+        this.selectedTemplate = "/JSTagHTML/templates/personal-schedule.html.jinja"
     }
 
     async loadSelectedTemplate() {
         try {
             const response = await fetch(this.selectedTemplate);
             if (!response.ok) {
-                throw new Error(`Failed to load template: ${response.status}`);
+                throw new Error(`Failed to load template: ${response.status} ${this.selectedTemplate}`);
             }
             this.templateText = await response.text();
         } catch (error) {
@@ -295,10 +295,16 @@ class WCAClient {
             for (const [key, activity] of Object.entries(coarse_activities)) {
                 var role_assignments = [];
                 for (const assignment of personAssignments) {
-                    if (assignment.event == activity.event && assignment.round == activity.round) {
-                        role_assignments.push(assignment.role);
+                    if (assignment.event == activity.event && 'r' + assignment.round == activity.round) {
+                        role_assignments.push(
+                            {
+                                'role': assignment.role,
+                                'group': assignment.group
+                            }
+                        );
                     }
                 }
+                role_assignments.sort((a, b) => a.group - b.group)
                 personRoundSchedule.push(
                     {
                         activity: activity, 
@@ -306,7 +312,7 @@ class WCAClient {
                     }
                 )
             }
-            personGroupSchedule.sort((a, b) => a.activity.round_start - b.activity.round_start);
+            personRoundSchedule.sort((a, b) => a.activity.round_start - b.activity.round_start);
 
             assignments[person.registrantId] = {
                 assignments: personAssignments,
