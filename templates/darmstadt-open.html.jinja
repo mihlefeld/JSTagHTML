@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <style>
         :root {
-            --tag-width: 8.5cm;
+            --tag-width: 9cm;
             --tag-height: 6cm;
             --page-width: 21cm;
             --page-height: 29.7cm;
@@ -44,7 +44,7 @@
         }
 
         .event-img {
-            height: 0.2cm;
+            height: 0.3cm;
         }
         
         .assignments {
@@ -63,8 +63,8 @@
           flex-direction: row;
           justify-content: center;
           align-items: center;
-          width: 1.5cm;
-          height: 0.5cm;
+          width: 1.68cm;
+          height: 0.55cm;
           font-size: 0.18cm;
           padding: 0.05cm;
           box-sizing: border-box;
@@ -74,11 +74,20 @@
         .day-Fr {
           background: var(--tertiary);
         }
+        .day-Fr.inactive {
+          background: color(from var(--tertiary) xyz calc(x) calc(y) z);
+        }
         .day-Sa {
           background: var(--secondary);
         }
+        .day-Sa.inactive {
+          background: oklch(0.8 0.05 234);
+        }
         .day-So {
           background: var(--primary);
+        }
+        .day-So.inactive {
+          background: oklch(0.8 0.05 28.31);
         }
         
         .front-name {
@@ -94,7 +103,7 @@
         }
         
         .logo {
-          height: 1cm;
+          height: 1em;
         }
         .front-country-flag {
           height: 1cm;
@@ -127,11 +136,12 @@
           font-weight: bold;
           opacity: 0.5;
         }
-        .inactive {
-          filter: saturate(0.3);
-        }
         .back {
         
+        }
+        .legend {
+          background: oklch(0.88 0.0 250);
+          color: black;
         }
     </style>
 </head>
@@ -140,18 +150,25 @@
     {% for person in persons %}
         <div class="nametag front">
             <p class="front-competition-name">{{competition.name}}</p>
-            <h2 class="front-name">{{ person.name }}</h2>
+            <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
             <img class="comp-logo" src="{{ file_url('comp-logo.png') }} "/>
             <div class="front-logo-row">
-              <span class="front-id adjust-size-to-fit">ID: {{ person.id }}</span>
+              <span class="front-id">ID: {{ person.id }}</span>
               <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 }}.png"></img>
-              <img class="logo" src="{{ file_url('logo.svg') }}">
+              <div class="logo-group">
+                <img class="logo" src="https://www.germancubeassociation.de/wp-content/uploads/2021/12/GCA_original_larger_no_shadow-300x117.png">
+                <img class="logo" src="https://assets.worldcubeassociation.org/assets/b4ea5cf/packs/static/components/StaticPages/LogoImages/1%20Positive%20Primary/WCA%20Logo-11f76952edde63e7601d.svg">
+              </div>
             </div>
         </div>
         <div class="nametag back">
             {% if person.schedule %}
             <div class="assignments">
+            <div class="event day-Sa">Samstag</div>
             {% for event in person.schedule.group_schedule %}
+            {% if event.activity.event == "222" and event.activity.round == 1  and event.activity.group == 1 %}
+              <div class="event day-So">Sonntag</div>
+            {% endif %}
             <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }} {{ "active" if event.roles[0] else "inactive"}}">
               <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
               <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
@@ -161,6 +178,10 @@
               <span>{{ event.activity.group_start.toLocaleTimeString('de-de', {hour: "2-digit", "minute": "2-digit"}) }}</span>
             </div>
             {% endfor %}
+            <div class="event legend">J = Judge</div>
+            <div class="event legend">C = Competitor</div>
+            <div class="event legend">R = Runner</div>
+            <div class="event legend">S = Scrambler</div>
             </div>
             {% else %}
             <p><em>No events assigned</em></p>

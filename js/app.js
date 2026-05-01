@@ -79,7 +79,8 @@ class UI {
         this.resetButton = document.getElementById('reset-template-button');
         this.saveSessionButton = document.getElementById('save-session-button');
         this.printButton = document.getElementById('print-button');
-        this.selection = document.getElementById('templates-select')
+        this.selection = document.getElementById('templates-select');
+        this.renderButton = document.getElementById('render-button');
     }
 
     setFetchStatus(message, isError = false) {
@@ -576,11 +577,20 @@ class Application {
             this.handleResetTemplate();
         });
 
-        // Live template editing
-        this.editor.session.on('change', () => {
+        this.ui.renderButton.addEventListener("click", () => {
             this.state.setTemplateText(this.editor.getValue());
             this.renderPreview();
+        })
+
+        this.editor.commands.addCommand({
+            name: "renderPreview",
+            bindKey: { win: "Ctrl-Enter", mac: "Command-Enter" },
+            exec: () => {
+            this.state.setTemplateText(this.editor.getValue());
+            this.renderPreview();
+            }
         });
+        
 
         // Enter key to fetch (shortcut)
         this.ui.competitionInput.addEventListener('keypress', (e) => {
