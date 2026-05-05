@@ -497,11 +497,35 @@ class TemplateRenderer {
                 throw new Error('Nunjucks library not loaded. Please check your internet connection.');
             }
             var env = new nunjucks.Environment();
+
             env.addFilter('dictkeysort', (data, key) => {
                 return Object.values(data).toSorted((a, b) => {return a[key] >= b[key];});
             });
             env.addFilter('keylist', (data, key) => {
                 return Object.values(data).map((obj) => obj[key]);
+            });
+            env.addFilter('makeqr', (value, cellSize = 6, margin = 2, ecc = 'M') => {
+                const text = value == null ? '' : String(value);
+                if (!text) return '';
+
+                if (typeof qrcode === 'undefined') {
+                    throw new Error('QR library not loaded. Include qrcode-generator in index.html.');
+                }
+
+                const safeEcc = ['L', 'M', 'Q', 'H'].includes(String(ecc).toUpperCase())
+                    ? String(ecc).toUpperCase()
+                    : 'M';
+
+                const qr = qrcode(0, safeEcc); // auto typeNumber
+                qr.addData(text);
+                qr.make();
+
+                const svg = qr.createSvgTag({
+                    cellSize: Number(cellSize) || 6,
+                    margin: Number(margin) || 2
+                });
+
+                return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
             });
 
             const uploadedContext = buildUploadedFilesContext();

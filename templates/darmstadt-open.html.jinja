@@ -64,7 +64,7 @@
           justify-content: center;
           align-items: center;
           width: 1.68cm;
-          height: 0.55cm;
+          height: 0.52cm;
           font-size: 0.18cm;
           padding: 0.05cm;
           box-sizing: border-box;
@@ -89,6 +89,15 @@
         .day-So.inactive {
           background: oklch(0.8 0.05 28.31);
         }
+        .back-name {
+          margin: 0;
+          padding: 0;
+          font-weight: 800;
+          align-text: top;
+          height: 1em;
+          line-height: 1em;
+          padding-bottom: 0.1cm;
+        }
         
         .front-name {
           font-weight: 800;
@@ -106,7 +115,15 @@
           height: 1em;
         }
         .front-country-flag {
-          height: 1cm;
+          height: 1.5cm;
+          z-index: 2;
+        }
+        .front-qr {
+          height: 1.5cm;
+          position: absolute;
+          left: 0.2cm;
+          bottom: 0.8cm;
+          
         }
         .front-id {
           font-weight: 800;
@@ -124,10 +141,10 @@
         }
         .comp-logo {
           position: absolute;
-          height: 3cm;
-          top: 1.2cm;
+          height: 2.8cm;
+          top: 0.9cm;
           z-index: 1;
-          opacity: 0.1;
+          opacity: 0.2;
           
         }
         .front-competition-name {
@@ -151,10 +168,11 @@
         <div class="nametag front">
             <p class="front-competition-name">{{competition.name}}</p>
             <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
-            <img class="comp-logo" src="{{ file_url('comp-logo.png') }} "/>
+            <img class="comp-logo" src="{{ file_url('zbls.svg') }} "/>
             <div class="front-logo-row">
               <span class="front-id">ID: {{ person.id }}</span>
-              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"></img>
+              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"/>
+              <img class="front-qr" src="{{ ("https://www.competitiongroups.com/competitions/"+ competition.id + "/persons/" + person.id) | makeqr(6, 2, "L") }}"/>
               <div class="logo-group">
                 <img class="logo" src="https://www.germancubeassociation.de/wp-content/uploads/2021/12/GCA_original_larger_no_shadow-300x117.png">
                 <img class="logo" src="https://assets.worldcubeassociation.org/assets/b4ea5cf/packs/static/components/StaticPages/LogoImages/1%20Positive%20Primary/WCA%20Logo-11f76952edde63e7601d.svg">
@@ -162,6 +180,7 @@
             </div>
         </div>
         <div class="nametag back">
+            <p class="back-name">{{person.name.split("(")[0] }}</p>
             {% if person.schedule %}
             <div class="assignments">
             <div class="event day-Sa">Samstag</div>
