@@ -40,7 +40,21 @@ class AppState {
 
     setCompetitionData(data) {
         this.competitionData = data;
+        this.setPreviewData(data);
         this.lastError = null;
+    }
+
+    setPreviewData(data) {
+        const previewData = {...data};
+        const newPersons = [];
+        
+        const longNames = previewData.persons.sort((a, b) => b.name.length - a.name.length).slice(0, 5);
+        newPersons.push(...longNames);
+        const manyAssignments = previewData.persons.sort((a, b) => b.schedule.assignments.length - a.schedule.assignments.length).slice(0, 5);
+        newPersons.push(...manyAssignments);
+
+        previewData.persons = newPersons;
+        this.previewData = previewData;
     }
 
     setTemplateText(text) {
@@ -641,7 +655,7 @@ class Application {
         try {
             const html = TemplateRenderer.renderFullPage(
                 this.state.templateText,
-                this.state.competitionData
+                this.state.previewData
             );
             this.state.setRenderedHtml(html);
             this.ui.showPreview(html);
@@ -673,10 +687,11 @@ class Application {
 
         // Open a new window with only the rendered template HTML and print it
         const printWindow = window.open('', '_blank');
-        printWindow.document.write(this.state.renderedHtml);
+        const fullPage = TemplateRenderer.renderFullPage(this.state.templateText, this.state.competitionData);
+        printWindow.document.write(fullPage);
         printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
+        // printWindow.print();
+        // printWindow.close();
     }
 
     saveSessionState() {

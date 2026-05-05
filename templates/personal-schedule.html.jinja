@@ -137,14 +137,14 @@
 </head>
 <body>
     <div class="nametags">
-    {% for person in persons %}
+    {% for person in persons | sort(false, false, "name") %}
         <div class="nametag front">
             <p class="front-competition-name">{{competition.name}}</p>
             <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
             <img class="comp-logo" src="{{ file_url('comp-logo.png') }} "/>
             <div class="front-logo-row">
               <span class="front-id">ID: {{ person.id }}</span>
-              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 }}.png"></img>
+              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"></img>
               <img class="logo" src="{{ file_url('logo.svg') }}">
             </div>
         </div>

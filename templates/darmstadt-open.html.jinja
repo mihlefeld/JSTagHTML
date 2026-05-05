@@ -147,14 +147,14 @@
 </head>
 <body>
     <div class="nametags">
-    {% for person in persons %}
+    {% for person in persons | sort(false, false, "name") %}
         <div class="nametag front">
             <p class="front-competition-name">{{competition.name}}</p>
             <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
             <img class="comp-logo" src="{{ file_url('comp-logo.png') }} "/>
             <div class="front-logo-row">
               <span class="front-id">ID: {{ person.id }}</span>
-              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 }}.png"></img>
+              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"></img>
               <div class="logo-group">
                 <img class="logo" src="https://www.germancubeassociation.de/wp-content/uploads/2021/12/GCA_original_larger_no_shadow-300x117.png">
                 <img class="logo" src="https://assets.worldcubeassociation.org/assets/b4ea5cf/packs/static/components/StaticPages/LogoImages/1%20Positive%20Primary/WCA%20Logo-11f76952edde63e7601d.svg">
