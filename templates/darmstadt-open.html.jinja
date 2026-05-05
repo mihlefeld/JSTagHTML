@@ -46,29 +46,34 @@
         }
 
         .event-img {
-            height: 0.3cm;
+            height: 0.4cm;
         }
         
         .assignments {
           align-self: start;
-          display: grid;
-          grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
-          grid-auto-flow: column;
+          //display: grid;
+          //grid-template-rows: repeat(7, 1fr); 
+          //grid-auto-flow: column;
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
           box-sizing: border-box;
           gap: 0.05cm;
-          height: 100%;
+          height: 5.2cm;
         }
         
         .event {
           border-radius: 0.1cm;
           display: flex;
           flex-direction: row;
-          justify-content: center;
+          justify-content: space-between;
           align-items: center;
-          width: 1.68cm;
-          height: 0.52cm;
-          font-size: 0.18cm;
+          width: 2.12cm;
+          height: 0.595cm;
+          font-size: 0.24cm;
+          font-weight: 600;
           padding: 0.05cm;
+          padding-right: 0.1cm;
           box-sizing: border-box;
           gap: 0.05cm;
         }
@@ -83,13 +88,13 @@
           background: var(--secondary);
         }
         .day-Sa.inactive {
-          background: oklch(0.8 0.05 234);
+          background: oklch(0.8 0.025 234);
         }
         .day-So {
           background: var(--primary);
         }
         .day-So.inactive {
-          background: oklch(0.8 0.05 28.31);
+          background: oklch(0.8 0.025 28.31);
         }
         .back-name {
           margin: 0;
@@ -170,7 +175,7 @@
         <div class="nametag front">
             <p class="front-competition-name">{{competition.name}}</p>
             <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
-            <img class="comp-logo" src="{{ file_url('zbls.svg') }} "/>
+            <img class="comp-logo" src="{{ file_url('comp-logo.svg') }} "/>
             <div class="front-logo-row">
               <span class="front-id">ID: {{ person.id }}</span>
               <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"/>
@@ -185,24 +190,35 @@
             <p class="back-name">{{person.name.split("(")[0] }}</p>
             {% if person.schedule %}
             <div class="assignments">
-            <div class="event day-Sa">Samstag</div>
+            <div class="event day-Sa"><span></span><span>Samstag</span><span></span></div>
             {% for event in person.schedule.group_schedule %}
             {% if event.activity.event == "222" and event.activity.round == 1  and event.activity.group == 1 %}
-              <div class="event day-So">Sonntag</div>
+              <div class="event day-So"><span></span><span>Sonntag</span><span></span></div>
             {% endif %}
+            {% if event.activity.round > 1 and event.activity.group != 1 %}
+            {% else %}
             <div class="event day-{{ event.activity.group_start.toLocaleString('de-de', {"weekday": "short"}) }} {{ "active" if event.roles[0] else "inactive"}}">
               <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
-              <span>R{{event.activity.round}}G{{ event.activity.group }}</span>
+              {% if event.activity.round > 1 %}
+              <span>R{{event.activity.round}}</span>
+              <span></span>
+              <span>{{ event.activity.round_start.toLocaleTimeString('de-de', {hour: "2-digit", "minute": "2-digit"}) }}</span>
+              {% else %}
+              <span>R{{event.activity.round}}.{{ event.activity.group }}</span>
               <span>
                 {{ event.roles[0][0] | upper}}
               </span>
               <span>{{ event.activity.group_start.toLocaleTimeString('de-de', {hour: "2-digit", "minute": "2-digit"}) }}</span>
+              {% endif %}
             </div>
+            {% endif %}
             {% endfor %}
-            <div class="event legend">J = Judge</div>
-            <div class="event legend">C = Competitor</div>
-            <div class="event legend">R = Runner</div>
-            <div class="event legend">S = Scrambler</div>
+            <div class="event legend" style="height: 1.24cm">
+              J = Judge <br>
+              C = Competitor <br>
+              R = Runner <br>
+              S = Scrambler <br>
+            </div>
             </div>
             {% else %}
             <p><em>No events assigned</em></p>
