@@ -44,6 +44,12 @@
           background-origin: border-box;
           background-size: cover;
         }
+        
+        .delegate {
+            background: linear-gradient(135deg, #f8fafc 0%, #ff9f91 100%);
+          background-origin: border-box;
+          background-size: cover;
+        }
 
         .event-img {
             height: 0.4cm;
@@ -172,7 +178,7 @@
 <body>
     <div class="nametags">
     {% for person in persons | sort(false, false, "name") %}
-        <div class="nametag front">
+        <div class="nametag front {% for role in person.roles %} {{ role }} {% endfor%}">
             <p class="front-competition-name">{{competition.name}}</p>
             <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] }}</h2>
             <img class="comp-logo" src="{{ file_url('comp-logo.svg') }} "/>

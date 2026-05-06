@@ -362,9 +362,7 @@ class WCAClient {
                 gender: person.gender,
                 avatar: person.avatar,
                 personalBests: person.personalBests,
-                registration: {
-                    role: person.registration?.role || 'COMPETITOR'
-                },
+                roles: person.roles,
                 schedule: assignments
             };
         });
