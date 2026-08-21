@@ -1,0 +1,304 @@
+{# TagHTML Nametag Template - Full Page Layout #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --tag-width: 8.5cm;
+            --tag-height: 5.5cm;
+            --page-width: 21cm;
+            --page-height: 29.7cm;
+            --primary: oklch(0.8 0.1 28.31);
+            --secondary: oklch(0.8 0.1 234);
+            --tertiary: oklch(0.8 0.1 78.52);
+        }
+        
+        body {
+          font-family: sans-serif;
+        }
+        
+        @page {
+            size: var(--page-width) var(--page-height);
+        } 
+        
+        .nametags { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, var(--tag-width)); 
+        }
+        
+        .nametag {
+          width: var(--tag-width);
+          height: var(--tag-height);
+          page-break-inside: avoid;
+          box-sizing: border-box;
+          border: 0.1cm dashed #333;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          overflow: hidden;
+          padding: 0.1cm;
+          justify-content: center;
+          position: relative;
+        }
+        
+        .front {
+          background-image: url({{ file_url('Nametag_Leer.png') }});
+          background-size: cover;
+          background-repeat: no-repeat;
+        }
+
+        .event-img {
+            height: 0.48cm;
+        }
+        
+        .assignments {
+          align-self: start;
+          display: grid;
+          grid-template-rows: 1fr 1fr 1fr 1fr; 
+          grid-auto-flow: column;
+          box-sizing: border-box;
+          gap: 0.05cm;
+          height: 100%;
+        }
+        
+        .event {
+          border-color: black;
+          border-style: solid;
+          border-width: 0.05cm;
+          border-radius: 0.1cm;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 1.15cm;
+          height: 1.25cm;
+          font-size: 0.18cm;
+          padding: 0.05cm;
+          box-sizing: border-box;
+          gap: 0.05cm;
+        }
+        
+        .day-Fr {
+          background: var(--tertiary);
+        }
+        .day-Sa {
+          background: var(--secondary);
+        }
+        .day-So {
+          background: var(--primary);
+        }
+        
+        .front-name {
+          font-weight: 800;
+          font-size: xx-large;
+          text-align: center;
+          width: 100%;
+          height: 1.4cm;
+          margin: 0;
+          z-index: 2;
+          line-height: 1.2em;
+        }
+        
+        .logo {
+          height: 1cm;
+        }
+        .front-country-flag {
+          height: 1cm;
+        }
+        .front-id {
+          font-weight: 800;
+          font-size: large;
+        }
+        .front-logo-row {
+          position: absolute;
+          top: 0;
+          width: 4cm;
+          left: 3.7cm;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          padding: 0.2cm;
+          box-sizing: border-box;
+          align-items: center;
+          top: 1cm;
+        }
+        .front-competition-name {
+          position: absolute;
+          top: 0.05cm;
+          font-weight: bold;
+          opacity: 0.5;
+        }
+        .inactive {
+          background: oklch(0.9 0.0 10);
+        }
+        .delegate-tag {
+          font-weight: 800;
+          position: absolute;
+          top: 0.2cm;
+          left: 3.7cm;
+          width: 4cm;
+          color: red;
+          text-align: center;
+        }
+        .back {
+        
+        }
+        .back-name {
+          font-weight: bold;
+          box-sizing: border-box;
+          align-items: center;
+          justify-content: center;
+          display: flex;
+          height: 1.25cm;
+          width: 2.2cm;
+          grid-row: 1 / 2;
+          grid-column: 6 / 8
+          border-color: black;
+          border-style: solid;
+          border-width: 0.05cm;
+          border-radius: 0.1cm;
+        }
+        .back-info {
+          box-sizing: border-box;
+          grid-row: 2 / 5;
+          grid-column: 5 / 8;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          border-color: black;
+          border-style: solid;
+          border-width: 0.05cm;
+          border-radius: 0.1cm;
+          width: 3.4cm;
+          height: 3.85cm;
+          padding: 0.05cm;
+        }
+        .back-id {
+          font-weight: bold;
+          font-size: x-small;
+          // position: absolute;
+          // transform: rotate(90deg) translate(0.4cm, -1.4cm);
+        }
+        .back-qr {
+          height: 2cm;
+        }
+        .legend {
+          font-size: x-small;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .room-4 {
+          background: oklch(0.45 0.1695 148.2);
+          color: white;
+        }
+        .room-1 {
+          background: #000;
+          color: white;
+        }
+        .room-2 {
+          background: oklch(0.45 0.2577 29.23);
+          color: white;
+        }
+        .room-3 {
+          background: #e6cc1a;
+        }
+        .group-role {
+          padding: 0.04cm;
+          border-radius: 0.05cm;
+          font-size: 0.15cm;
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="nametags">
+    {% for person in persons | sort(false, false, "name") %}
+        <div class="nametag front">
+            {% if "delegate" in person.roles %}
+            <span class="delegate-tag">DELEGATE</span>
+            {% elif "organizer" in person.roles %}
+            <span class="delegate-tag">ORGANIZER</span>
+            {% endif %}
+            <div class="front-logo-row">
+              <h2 class="front-name adjust-size-to-fit">{{ person.name.split("(")[0] | upper}}</h2>
+              <img class="front-country-flag" src="/JSTagHTML/assets/flags/{{ person.countryIso2 | lower}}.png"></img>
+              <span class="front-id">ID: {{ person.id }}</span>
+            </div>
+        </div>
+        <div class="nametag back">
+            {% if person.schedule %}
+            <div class="assignments">
+            {% for event in person.schedule.round_schedule %}
+              {% if event.activity.event != "other" and event.activity.round == 'r1' and (event.activity.room.id == 1 or event.activity.room.id == 4) and ('Attempt 1' in event.activity.name or event.activity.event != '333fm') %}
+              <div class="event {{ "active" if event.roles[0] else "inactive"}}">
+                <span>{{ event.activity.round_start.toLocaleTimeString('de-de', {weekday: "short", hour: "2-digit", "minute": "2-digit"}) }}</span>
+                    <img class="event-img" src="/JSTagHTML/assets/svgs/{{ event.activity.event }}.svg">
+                    <span style="height: 1em;">
+                      {% if event.activity.event == "333fm" and event.roles[0]%}
+                        <span class="group-role room-4">C<span>
+                      {% elif event.activity.room.id != 4 %}
+                        {% for role in event.roles %}
+                        <span class="group-role room-{{ role.group % 3 + 1}} ">{{ role.role[0] | upper }}{{ role.group }}</span>
+                        {% endfor %}
+                      {% else %}
+                        {% for role in event.roles %}
+                        <span class="group-role room-4">{{ role.role[0] | upper }}{{ role.group }}</span>
+                        {% endfor %}
+                      {% endif %}
+                    </span>
+              </div>
+              {% endif %} 
+            {% endfor %}
+            <div class='back-name' > 
+              <span style="width: 2cm; height: 1cm; text-align: center;" class="adjust-size-to-fit">{{ person.name.split("(")[0] | upper}}</span>
+            </div>
+            <div class='back-info'>
+              <span class="back-id">ID: {{ person.id }}</span>
+              <img class="back-qr" src="{{ ("https://www.competitiongroups.com/competitions/"+ competition.id + "/persons/" + person.id) | makeqr(6, 2, "L") }}"/>
+              <div class="legend">
+                <span>J:</span><span style="text-align: end">Judge</span>
+                <span>R:</span><span style="text-align: end">Runner</span>
+                <span>S:</span><span style="text-align: end">Scrambler</span>
+                <span>C:</span><span style="text-align: end">Competitor</span>
+              </div>
+            </div>
+            </div>
+            {% else %}
+            <p><em>No events assigned</em></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    <script>
+    document.querySelectorAll('.adjust-size-to-fit').forEach(function(el) {
+      const originalFontSize = parseFloat(window.getComputedStyle(el).fontSize);
+      let fontSize = originalFontSize;
+      const parentWidth = el.clientWidth;
+      const parentHeight = el.clientHeight;
+
+      // Create a clone for measurement
+      const clone = el.cloneNode(true);
+      clone.style.visibility = 'hidden';
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      clone.style.top = '-9999px';
+      clone.style.width = parentWidth + 'px';
+      clone.style.height = parentHeight;
+      clone.style.whiteSpace = 'wrap';
+      document.body.appendChild(clone);
+
+      // Reduce font size until it fits or reaches original minimum
+      while ((clone.scrollWidth > parentWidth || clone.scrollHeight > parentHeight) && fontSize > 4) {
+        fontSize -= 1;
+        clone.style.fontSize = fontSize + 'px';
+      }
+
+      // Apply the new font size, but never increase it
+      el.style.fontSize = Math.min(fontSize, originalFontSize) + 'px';
+      document.body.removeChild(clone);
+    });
+    </script>
+</body>
+</html>

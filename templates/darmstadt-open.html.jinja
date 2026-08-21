@@ -45,8 +45,14 @@
           background-size: cover;
         }
         
-        .delegate {
-            background: linear-gradient(135deg, #f8fafc 0%, #ff9f91 100%);
+        .delegate, .trainee-delegate {
+          background: linear-gradient(135deg, #f8fafc 0%, #fcc 100%);
+          background-origin: border-box;
+          background-size: cover;
+        }
+        
+        .organizer {
+          background: linear-gradient(135deg, #f8fafc 0%, #fcf 100%);
           background-origin: border-box;
           background-size: cover;
         }
@@ -192,7 +198,7 @@
               </div>
             </div>
         </div>
-        <div class="nametag back">
+        <div class="nametag back {% for role in person.roles %} {{ role }} {% endfor%}">
             <p class="back-name">{{person.name.split("(")[0] }}</p>
             {% if person.schedule %}
             <div class="assignments">

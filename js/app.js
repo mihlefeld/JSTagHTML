@@ -264,9 +264,10 @@ class WCAClient {
                 try {
                     let role = assignment.assignmentCode
                         .replace('staff-', '')
-                        .replace('stagelead', 'lead');
+                        .replace('stagelead', 'lead')
+                        .replace('dataentry', 'entry');
                     
-                    const validRoles = ['competitor', 'runner', 'judge', 'scrambler', 'delegate', 'lead'];
+                    const validRoles = ['competitor', 'runner', 'judge', 'scrambler', 'delegate', 'lead', 'entry'];
                     if (!validRoles.includes(role)) {
                         continue;
                     }
